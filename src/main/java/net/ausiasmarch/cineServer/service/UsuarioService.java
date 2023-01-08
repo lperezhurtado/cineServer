@@ -184,7 +184,7 @@ public class UsuarioService {
     //METODOS PARA GENERAR USUARIOS
 
     public Long generateSome(Integer amount) {
-        authService.onlyAdmins();
+        //authService.onlyAdmins();
         List<UsuarioEntity> userList = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             UsuarioEntity oUsuarioEntity = generateRandomUser();
