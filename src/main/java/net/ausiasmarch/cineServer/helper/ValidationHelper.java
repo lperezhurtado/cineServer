@@ -25,9 +25,8 @@ public class ValidationHelper {
     }
 
     public static void validateStringLength(String strNombre, int minlength, int maxlength, String error) {
-        if (strNombre.length() >= minlength && strNombre.length() <= maxlength) {
-        } else {
-            throw new ValidationException("error en la validación: " + error);
+        if (strNombre.length() < minlength || strNombre.length() > maxlength) {
+            throw new ValidationException("Longitud inadecuada: " + error);
         }
     }
 
@@ -66,12 +65,12 @@ public class ValidationHelper {
     }
 
     public static void validateLogin(String strLogin, String error) {
-        validateStringLength(strLogin, 5, 20, error);
+        validateStringLength(strLogin, 4, 20, error);
         String ePattern = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){4,18}[a-zA-Z0-9]$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
         java.util.regex.Matcher m = p.matcher(strLogin);
         if (!m.matches()) {
-            throw new ValidationException("error de validación: " + error);
+            throw new ValidationException("Error de validación: " + error);
         }
     }
 

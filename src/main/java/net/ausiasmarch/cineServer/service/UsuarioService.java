@@ -166,7 +166,7 @@ public class UsuarioService {
         authService.onlyAdmins();
         ValidationHelper.validateRPP(pageable.getPageSize());
 
-        if (strFilter == null || strFilter.length()==0) {
+        if (strFilter == null || strFilter.length() == 0) {
             if (id_tipousuario == null) {
                     return usuarioRepo.findAll(pageable);
             } else {
@@ -174,9 +174,9 @@ public class UsuarioService {
             }
         } else {
             if (id_tipousuario == null) {
-                    return usuarioRepo.findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContaining(strFilter,strFilter,strFilter, pageable);
+                    return usuarioRepo.findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContainingOrLoginIgnoreCaseContaining(strFilter, strFilter, strFilter, strFilter, pageable);
             } else {
-                    return usuarioRepo.findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContainingAndTipousuarioId(strFilter,strFilter,strFilter, id_tipousuario, pageable);
+                    return usuarioRepo.findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContainingOrLoginIgnoreCaseContainingAndTipousuarioId(strFilter, strFilter, strFilter, strFilter, id_tipousuario, pageable);
             }
         }
     } 

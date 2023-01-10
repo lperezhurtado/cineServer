@@ -15,9 +15,9 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
     Page<UsuarioEntity> findByTipousuarioId(Long id_tipousuario, Pageable oPageable);
                         
-    Page<UsuarioEntity> findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContaining(String strFilterName, String strFilterSurname, String strFilterLast_name, Pageable oPageable);
+    Page<UsuarioEntity> findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContainingOrLoginIgnoreCaseContaining(String strFilterName, String strFilterSurname, String strFilterLast_name, String login, Pageable oPageable);
 
-    Page<UsuarioEntity> findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContainingAndTipousuarioId(String strFilterName, String strFilterSurname, String strFilterLast_name, Long id_usertype, Pageable oPageable);
+    Page<UsuarioEntity> findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContainingOrLoginIgnoreCaseContainingAndTipousuarioId(String strFilterName, String strFilterSurname, String strFilterLast_name, String login, Long id_usertype, Pageable oPageable);
 
     Page<UsuarioEntity> findByNombreIgnoreCaseContainingOrApellido1IgnoreCaseContainingOrApellido2IgnoreCaseContaining(String strFilterName, String strFilterSurname, String strFilterLast_name, Long id_team, Pageable oPageable);
 
