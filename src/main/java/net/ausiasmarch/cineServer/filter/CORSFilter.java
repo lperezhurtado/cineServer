@@ -35,7 +35,7 @@ public class CORSFilter implements Filter {
         if (req instanceof HttpServletRequest && res instanceof HttpServletResponse) {
 
             HttpServletRequest oRequest = (HttpServletRequest) req;
-            HttpServletResponse oResponse = (HttpServletResponse) res;
+            //HttpServletResponse oResponse = (HttpServletResponse) res;
             HttpServletRequest request = (HttpServletRequest) req;
             HttpServletResponse response = (HttpServletResponse) res;
 

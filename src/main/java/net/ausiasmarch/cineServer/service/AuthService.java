@@ -48,7 +48,7 @@ public class AuthService {
             return usuarioLogged;
         }
         else{
-            throw new UnauthorizationException("No hay sesiones");
+            throw new UnauthorizationException("No hay usuario activo");
         }
     }
 
