@@ -50,11 +50,11 @@ public class UsuarioControl {
 
     @GetMapping("")
     public ResponseEntity<Page<UsuarioEntity>> getPage(
-        @ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable oPageable,
+        @ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable,
         @RequestParam(name = "filter", required = false) String strFilter,
         @RequestParam(value = "tipousuario", required = false) Long id_tipousuario
         ) {
-        return new ResponseEntity<Page<UsuarioEntity>>(usuarioService.getPage(oPageable, strFilter, id_tipousuario), HttpStatus.OK);
+        return new ResponseEntity<Page<UsuarioEntity>>(usuarioService.getPage(pageable, strFilter, id_tipousuario), HttpStatus.OK);
     }
 
     //GENERA USUARIOS

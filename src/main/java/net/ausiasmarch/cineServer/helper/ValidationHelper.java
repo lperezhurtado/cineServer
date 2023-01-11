@@ -40,14 +40,14 @@ public class ValidationHelper {
         String strDNI = itDNI.trim().replaceAll(" ", "");
         //VALIDACION DNI SIMPLIFICADA
         if (strDNI.length() != 9 || !isNumeric(strDNI.substring(0, 8))) {
-            throw new ValidationException("Error de validación: " + error);
+            throw new ValidationException(error);
         }
         else{
             int intPartDNI = Integer.parseInt(strDNI.substring(0, 8));
             char cLetraDNI = strDNI.charAt(8);
             int valNumDni = intPartDNI % 23;
             if ("TRWAGMYFPDXBNJZSQVHLCKE".charAt(valNumDni) != cLetraDNI) {
-                throw new ValidationException("Error de validación: " + error);
+                throw new ValidationException(error);
             }
         }
 
@@ -73,7 +73,7 @@ public class ValidationHelper {
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(exprRegEmail);
         java.util.regex.Matcher m = p.matcher(email);
         if (!m.matches()) {
-            throw new ValidationException("error de validación: " + error);
+            throw new ValidationException(error);
         }
     }
 
@@ -83,7 +83,7 @@ public class ValidationHelper {
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
         java.util.regex.Matcher m = p.matcher(strLogin);
         if (!m.matches()) {
-            throw new ValidationException("Error de validación: " + error);
+            throw new ValidationException(error);
         }
     }
 

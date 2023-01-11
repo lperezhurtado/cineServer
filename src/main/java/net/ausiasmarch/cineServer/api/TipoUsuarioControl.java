@@ -34,9 +34,9 @@ public class TipoUsuarioControl {
 
     @GetMapping("")
     public ResponseEntity<Page<TipoUsuarioEntity>> getPage(
-        @ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable oPageable
+        @ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable
         ) {
-        return new ResponseEntity<Page<TipoUsuarioEntity>>(tipoUsuarioService.getPage(oPageable), HttpStatus.OK);
+        return new ResponseEntity<Page<TipoUsuarioEntity>>(tipoUsuarioService.getPage(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/count")
