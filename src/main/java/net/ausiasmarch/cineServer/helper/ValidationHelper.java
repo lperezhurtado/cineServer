@@ -76,6 +76,13 @@ public class ValidationHelper {
             throw new ValidationException(error);
         }
     }
+    
+    //Validacion para año de Pelicula
+    public static void validateInt(int numero, int minLenght, int maxLenght, String error) {
+        if (numero < minLenght || numero > maxLenght) {
+            throw new ValidationException(error);
+        } 
+    }
 
     public static void validateLogin(String strLogin, String error) {
         validateStringLength(strLogin, 4, 20, error);
@@ -109,5 +116,11 @@ public class ValidationHelper {
         } else {
             throw new ValidationException("error de validación: " + error);
         }
+    }
+
+    public static void validateFechaBaja(LocalDateTime fechaAlta, LocalDateTime fechaBaja) {
+        if( fechaBaja != null && Duration.between(fechaAlta, fechaBaja).isNegative() ) {
+            throw new ValidationException("Fecha de baja no puede ser anterior a la fecha de alta");    
+        }  
     }
 }

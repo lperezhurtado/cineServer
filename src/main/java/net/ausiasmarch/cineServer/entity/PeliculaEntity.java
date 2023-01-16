@@ -1,6 +1,6 @@
 package net.ausiasmarch.cineServer.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +32,10 @@ public class PeliculaEntity {
     private String director;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private LocalDate fechaAlta;
+    private LocalDateTime fechaAlta;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private LocalDate fechaBaja;
+    private LocalDateTime fechaBaja;
 
     private boolean versionNormal;
     private boolean versionEspecial;
@@ -96,19 +96,19 @@ public class PeliculaEntity {
         this.director = director;
     }
 
-    public LocalDate getFechaAlta() {
+    public LocalDateTime getFechaAlta() {
         return fechaAlta;
     }
 
-    public void setFechaAlta(LocalDate fechaAlta) {
+    public void setFechaAlta(LocalDateTime fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
 
-    public LocalDate getFechaBaja() {
+    public LocalDateTime getFechaBaja() {
         return fechaBaja;
     }
 
-    public void setFechaBaja(LocalDate fechaBaja) {
+    public void setFechaBaja(LocalDateTime fechaBaja) {
         this.fechaBaja = fechaBaja;
     }
 

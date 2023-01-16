@@ -27,7 +27,6 @@ public class TipoUsuarioService {
         return tipoUsuarioRepo.getReferenceById(id);
     }
 
-
     public Long count() {
         return tipoUsuarioRepo.count();
     }
@@ -39,10 +38,10 @@ public class TipoUsuarioService {
         return page;
     } 
 
-    /*public Long create(TipoUsuarioEntity newTipoUsuario) {
+    public Long create(TipoUsuarioEntity newTipoUsuario) {
         newTipoUsuario.setId(0L);
         return tipoUsuarioRepo.save(newTipoUsuario).getId();
-    }*/
+    }
 
     public Long delete(Long id) {
         tipoUsuarioRepo.deleteById(id);
