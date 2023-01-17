@@ -44,6 +44,8 @@ public class PeliculaEntity {
     @JoinColumn(name = "id_genero")
     private GeneroEntity genero;
 
+    private String imagen;
+
     @OneToMany(mappedBy = "pelicula" , fetch = FetchType.LAZY)
     private final List<SesionEntity> sesiones;
 
@@ -134,6 +136,14 @@ public class PeliculaEntity {
 
     public void setGenero(GeneroEntity genero) {
         this.genero = genero;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     public List<SesionEntity> getSesiones() {
