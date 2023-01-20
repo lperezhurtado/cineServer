@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tipoproducto")
+@Table(name = "pelicula")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PeliculaEntity {
 
@@ -144,10 +144,6 @@ public class PeliculaEntity {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
-    }
-
-    public List<SesionEntity> getSesiones() {
-        return sesiones;
     }
 
     public int getSesionesCount() {

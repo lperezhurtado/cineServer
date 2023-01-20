@@ -2,10 +2,12 @@ package net.ausiasmarch.cineServer.helper;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Random;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomHelper {
@@ -41,10 +43,25 @@ public class RandomHelper {
     public static Date getRadomDate() {
         GregorianCalendar gc = new GregorianCalendar();
         int year = getRandomInt(2010, 2019);
-        gc.set(gc.YEAR, year);
-        int dayOfYear = getRandomInt(1, gc.getActualMaximum(gc.DAY_OF_YEAR));
-        gc.set(gc.DAY_OF_YEAR, dayOfYear);
+        gc.set(Calendar.YEAR, year);
+        int dayOfYear = getRandomInt(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR));
+        gc.set(Calendar.DAY_OF_YEAR, dayOfYear);
         Date date = new Date(gc.getTimeInMillis());
+        return date;
+    }
+    //FECHA PARA AÑADIRSELO AL NOMBRE DE IMAGEN PUEDE SERVIR PARA FECHA DE BAJA
+    public static LocalDateTime randomDate() {
+        LocalDateTime now = LocalDateTime.now();
+        return now;
+    }
+
+    //DEVUELVE FECHA ACTUAL EN FORMATO LONG. Se utiliza en el sufijo de nombre de pelicula
+    public static Long dateLong() {
+        LocalDateTime now =LocalDateTime.now().minusNanos(getRadomChar());
+        
+        ZonedDateTime zdt = ZonedDateTime.of(now, ZoneId.systemDefault());
+        long date = zdt.toInstant().toEpochMilli();
+
         return date;
     }
 

@@ -6,10 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.google.gson.Gson;
+
+import org.springframework.util.StringUtils;
 
 import net.ausiasmarch.cineServer.entity.PeliculaEntity;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotFound;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotModified;
+import net.ausiasmarch.cineServer.helper.FileHelper;
+import net.ausiasmarch.cineServer.helper.RandomHelper;
 import net.ausiasmarch.cineServer.helper.ValidationHelper;
 import net.ausiasmarch.cineServer.repository.GeneroRepository;
 import net.ausiasmarch.cineServer.repository.PeliculaRepository;
@@ -45,12 +52,34 @@ public class PeliculaService {
     }
 
     //CREATE Method (C)
-    public Long create(PeliculaEntity newPelicula) {
+    /*public Long create(PeliculaEntity newPelicula) {
         authService.onlyAdmins();
         validatePelicula(newPelicula);
 
         newPelicula.setId(0L);
         return peliculaRepo.save(newPelicula).getId();
+    }*/
+
+    //CREATE CON IMAGEN
+    public Long create(String newPelicula, MultipartFile multipartfile) {
+        authService.onlyAdmins();
+
+        String fileName = StringUtils.cleanPath(multipartfile.getOriginalFilename()); //Obtenemos el nombre del fichero
+        String uploadDir = "src/images/peliculas"; //Establecemos el directorio donde se subiran nuestros ficheros  
+
+        String sufix = RandomHelper.dateLong().toString();
+        String uniqueFileName = sufix+"-"+fileName;
+
+        Gson gson = new Gson();
+        PeliculaEntity pelicula = gson.fromJson(newPelicula, PeliculaEntity.class); //convierte el String a UsuarioEntity
+
+        validatePelicula(pelicula);
+        pelicula.setId(0L);
+        pelicula.setImagen(uniqueFileName); //Se guarda la imagen en newPelicula
+        
+        FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la imagen en la carpeta images
+
+        return peliculaRepo.save(pelicula).getId();
     }
 
     //GET Method (R)
@@ -60,7 +89,7 @@ public class PeliculaService {
     }
 
     //UPDATE Method (U)
-    @Transactional
+    /*@Transactional
     public Long update(PeliculaEntity updatedPelicula) {
         validateID(updatedPelicula.getId());
         authService.onlyAdmins();
@@ -78,12 +107,42 @@ public class PeliculaService {
         actualPelicula.setGenero(generoService.get(updatedPelicula.getGenero().getId()));
 
         return peliculaRepo.save(actualPelicula).getId();
-    }
+    }*/
+
+    //UPDATE CON IMAGEN (U)
+    @Transactional
+    public Long update(String updatedPelicula, MultipartFile multipartfile ) {
+
+        Gson gson = new Gson();
+        PeliculaEntity pelicula = gson.fromJson(updatedPelicula, PeliculaEntity.class);
+        validatePelicula(pelicula);
+
+        if(!multipartfile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(multipartfile.getOriginalFilename()); //Obtenemos el nombre del fichero
+            String uploadDir = "src/images/peliculas";
+
+            String sufix = RandomHelper.dateLong().toString();
+            String uniqueFileName = sufix+"-"+fileName;
+            pelicula.setImagen(uniqueFileName);
+
+            PeliculaEntity actualPelicula = peliculaRepo.findById(pelicula.getId()).get();
+            String actualImage = actualPelicula.getImagen();
+            
+            FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la nueva imagen
+            FileHelper.deleteImage(uploadDir, actualImage); //Borra la imagen anterior
+        }
+
+        return peliculaRepo.save(pelicula).getId();
+    } 
 
     //DELETE Method (D)
     public Long delete(Long id) {
         authService.onlyAdmins();
         validateID(id);
+        PeliculaEntity deletedPelicula = peliculaRepo.getReferenceById(id);
+        String imagen = deletedPelicula.getImagen();
+        String uploadDir = "src/images/peliculas";
+        FileHelper.deleteImage(uploadDir, imagen);
         peliculaRepo.deleteById(id);
 
         if(peliculaRepo.existsById(id)) {
@@ -102,7 +161,24 @@ public class PeliculaService {
     //GETPAGE Method
     public Page<PeliculaEntity> getPage(Pageable pageable, String filter, Long id_genero) {
         
-        if( filter.isBlank() && !id_genero.equals(null) ) {
+        if (filter == null || filter.length() == 0) {
+            if (id_genero == null) {
+                return peliculaRepo.findAll(pageable);
+            } else {
+                return peliculaRepo.findByGeneroId(id_genero, pageable);
+            }
+        } else {
+            if (id_genero == null) {
+                return peliculaRepo.findByTituloIgnoreCaseContainingOrDirectorIgnoreCaseContaining(filter, filter, pageable);
+            } else {
+                return peliculaRepo.findByTituloIgnoreCaseContainingOrDirectorIgnoreCaseContainingAndGeneroId(filter, filter, id_genero, pageable);
+            }
+            
+        }
+
+        //REVISAR ESTRUCTURA DE GETPAGE
+
+        /*if( filter.isBlank() && !id_genero.equals(null) ) {
             return peliculaRepo.findByGeneroId(id_genero, pageable);
         }
         else if( !filter.isBlank() && id_genero.equals(null) ) {
@@ -113,7 +189,7 @@ public class PeliculaService {
         }
         else {
             return peliculaRepo.findAll(pageable);
-        }
+        }*/
     }
     
 }

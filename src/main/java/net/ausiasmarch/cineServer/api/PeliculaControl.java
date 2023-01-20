@@ -1,6 +1,11 @@
 package net.ausiasmarch.cineServer.api;
 
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import net.ausiasmarch.cineServer.entity.PeliculaEntity;
 import net.ausiasmarch.cineServer.service.PeliculaService;
@@ -28,10 +35,26 @@ public class PeliculaControl {
         return new ResponseEntity<Long>(peliculaService.count(), HttpStatus.OK);
     }
 
+    //GETPAGE
+    @GetMapping("")
+    public ResponseEntity<Page<PeliculaEntity>> getPage(
+        @ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable,
+        @RequestParam(name = "filter", required = false) String filter,
+        @RequestParam(name = "genero", required = false) Long id_genero
+        ) {
+        return new ResponseEntity<Page<PeliculaEntity>>(peliculaService.getPage(pageable, filter, id_genero), HttpStatus.OK);
+    }
+
     //CREATE (C)
-    @PostMapping("/")
+    /*@PostMapping("/")
     public ResponseEntity<Long> create(@RequestBody PeliculaEntity newPelicula) {
         return new ResponseEntity<Long>(peliculaService.create(newPelicula), HttpStatus.OK);
+    }*/
+
+    //CREATE CON IMAGEN
+    @PostMapping("/")
+    public ResponseEntity<Long> create(@RequestParam("pelicula") String pelicula, @RequestParam("fichero") MultipartFile multipartfile ) {
+        return new ResponseEntity<Long>(peliculaService.create(pelicula, multipartfile), HttpStatus.OK);
     }
 
     //GET (R)
@@ -41,9 +64,14 @@ public class PeliculaControl {
     }
 
     //UPDATE (U)
-    @PutMapping("")
+    /*@PutMapping("")
     public ResponseEntity<Long> update(@RequestBody PeliculaEntity updatedPelicula) {
         return new ResponseEntity<Long>(peliculaService.update(updatedPelicula), HttpStatus.OK);
+    }*/
+
+    @PutMapping("")
+    public ResponseEntity<Long> update(@RequestParam("pelicula") String updatedPelicula, @RequestParam("fichero") MultipartFile multipartfile) {
+        return new ResponseEntity<Long>(peliculaService.update(updatedPelicula, multipartfile), HttpStatus.OK);
     }
 
     //DELETE (D)

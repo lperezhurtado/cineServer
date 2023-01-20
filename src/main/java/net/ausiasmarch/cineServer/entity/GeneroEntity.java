@@ -9,12 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table
+@Table(name = "genero")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GeneroEntity {
 
@@ -31,8 +32,14 @@ public class GeneroEntity {
         this.peliculas = new ArrayList<>();
     }
 
+    public GeneroEntity(Long id, String nombre) {
+        this.peliculas = new ArrayList<>();
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -40,19 +47,20 @@ public class GeneroEntity {
     }
 
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public List<PeliculaEntity> getPeliculas() {
-        return peliculas;
-    }
-
     public int getPeliculasCount() {
         return peliculas.size();
+    }
+
+    @PreRemove
+    public void nullify() {
+        this.peliculas.forEach(c -> c.setGenero(null));
     }
     
 }
