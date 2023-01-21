@@ -75,9 +75,9 @@ public class PeliculaService {
 
         validatePelicula(pelicula);
         pelicula.setId(0L);
-        pelicula.setImagen(uniqueFileName); //Se guarda la imagen en newPelicula
+        pelicula.setImagen(uniqueFileName); //Se guarda el nombre de la imagen en newPelicula
         
-        FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la imagen en la carpeta images
+        FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la imagen en la carpeta images/peliculas
 
         return peliculaRepo.save(pelicula).getId();
     }
@@ -86,6 +86,12 @@ public class PeliculaService {
     public PeliculaEntity get(Long id) {
         validateID(id);
         return peliculaRepo.findById(id).get();
+    }
+
+    public byte[] getImage(String fileName) {
+        String uploadDir = "src/images/peliculas";
+        
+        return FileHelper.getImage(fileName, uploadDir);
     }
 
     //UPDATE Method (U)

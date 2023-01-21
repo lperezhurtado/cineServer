@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+//import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,12 +63,18 @@ public class PeliculaControl {
         return new ResponseEntity<PeliculaEntity>(peliculaService.get(id), HttpStatus.OK);
     }
 
+    @GetMapping("/images/{filename}")
+    public ResponseEntity<byte[]> getImage(@PathVariable(value = "filename") String filename) {
+        return new ResponseEntity<byte[]>(peliculaService.getImage(filename), HttpStatus.OK);
+    }
+
     //UPDATE (U)
     /*@PutMapping("")
     public ResponseEntity<Long> update(@RequestBody PeliculaEntity updatedPelicula) {
         return new ResponseEntity<Long>(peliculaService.update(updatedPelicula), HttpStatus.OK);
     }*/
 
+    //UPDATE CON IMAGEN (U)
     @PutMapping("")
     public ResponseEntity<Long> update(@RequestParam("pelicula") String updatedPelicula, @RequestParam("fichero") MultipartFile multipartfile) {
         return new ResponseEntity<Long>(peliculaService.update(updatedPelicula, multipartfile), HttpStatus.OK);

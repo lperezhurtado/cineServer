@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.cineServer.entity.GeneroEntity;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotFound;
+import net.ausiasmarch.cineServer.helper.ValidationHelper;
 import net.ausiasmarch.cineServer.repository.GeneroRepository;
 
 @Service
@@ -38,14 +39,12 @@ public class GeneroService {
     //GET PAGE METHOD
     public Page<GeneroEntity> getPage(Pageable pageable, String filter) {
 
-        Page<GeneroEntity> page;
-
-        if (filter.equals(null) || filter.trim().isEmpty()) {
-            page = generoRepo.findAll(pageable);
+        ValidationHelper.validateRPP(pageable.getPageSize());
+        if (filter == null || filter.isEmpty()) {
+            return generoRepo.findAll(pageable);
         } else {
-            page = generoRepo.findByNombreIgnoreCaseContaining(filter, pageable);
+            return generoRepo.findByNombreIgnoreCaseContaining(filter, pageable);
         }
-        return page;
     } 
 
     //CREATE METHOD
