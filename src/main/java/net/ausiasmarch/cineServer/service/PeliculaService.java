@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import net.ausiasmarch.cineServer.entity.PeliculaEntity;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotFound;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotModified;
+import net.ausiasmarch.cineServer.exceptions.ValidationException;
 import net.ausiasmarch.cineServer.helper.FileHelper;
 import net.ausiasmarch.cineServer.helper.RandomHelper;
 import net.ausiasmarch.cineServer.helper.ValidationHelper;
@@ -44,9 +45,9 @@ public class PeliculaService {
 
     public void validatePelicula(PeliculaEntity peliculaEntity) {
         ValidationHelper.validateStringLength(peliculaEntity.getTitulo(), 1, 45, "Título no válido");
-        ValidationHelper.validateInt(peliculaEntity.getAño(),1950,2025, "Año no válido");
+        ValidationHelper.validateInt(peliculaEntity.getyear(),1950,2025, "Año no válido");
         ValidationHelper.validateInt(peliculaEntity.getDuracion(), 30, 230, "Duración no válida");
-        ValidationHelper.validateStringLength(peliculaEntity.getDirector(), 3, 45, "Nombre no válido");
+        ValidationHelper.validateStringLength(peliculaEntity.getDirector(), 2, 45, "Nombre no válido");
         ValidationHelper.validateFechaBaja(peliculaEntity.getFechaAlta(), peliculaEntity.getFechaBaja()); //Valida que la fecha de baja NO sea inferior a la de alta
         generoService.validate(peliculaEntity.getGenero().getId());
     }
@@ -118,27 +119,41 @@ public class PeliculaService {
     //UPDATE CON IMAGEN (U)
     @Transactional
     public Long update(String updatedPelicula, MultipartFile multipartfile ) {
+        authService.onlyAdmins();
 
         Gson gson = new Gson();
         PeliculaEntity pelicula = gson.fromJson(updatedPelicula, PeliculaEntity.class);
+        validateID(pelicula.getId());
         validatePelicula(pelicula);
 
-        if(!multipartfile.isEmpty()) {
+        PeliculaEntity actualPelicula = peliculaRepo.findById(pelicula.getId()).get();
+        actualPelicula.setTitulo(pelicula.getTitulo());
+        actualPelicula.setyear(pelicula.getyear());
+        actualPelicula.setDuracion(pelicula.getDuracion());
+        actualPelicula.setDirector(pelicula.getDirector());
+        actualPelicula.setFechaAlta(actualPelicula.getFechaAlta());
+        actualPelicula.setFechaBaja(pelicula.getFechaBaja());
+        actualPelicula.setVersionNormal(pelicula.isVersionNormal());
+        actualPelicula.setVersionEspecial(pelicula.isVersionEspecial());
+        actualPelicula.setGenero(generoService.get(pelicula.getGenero().getId()));
+
+        if(multipartfile.getOriginalFilename() != "" || multipartfile.getOriginalFilename() != null) {
             String fileName = StringUtils.cleanPath(multipartfile.getOriginalFilename()); //Obtenemos el nombre del fichero
             String uploadDir = "src/images/peliculas";
 
             String sufix = RandomHelper.dateLong().toString();
             String uniqueFileName = sufix+"-"+fileName;
-            pelicula.setImagen(uniqueFileName);
-
-            PeliculaEntity actualPelicula = peliculaRepo.findById(pelicula.getId()).get();
+            
             String actualImage = actualPelicula.getImagen();
             
             FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la nueva imagen
             FileHelper.deleteImage(uploadDir, actualImage); //Borra la imagen anterior
-        }
 
-        return peliculaRepo.save(pelicula).getId();
+            actualPelicula.setImagen(uniqueFileName); //actualiza el nombre de imagen
+        } else {
+            throw new ValidationException("no hay imagen");
+        }
+        return peliculaRepo.save(actualPelicula).getId();
     } 
 
     //DELETE Method (D)

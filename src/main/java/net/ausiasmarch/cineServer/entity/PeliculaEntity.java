@@ -27,7 +27,7 @@ public class PeliculaEntity {
     private Long id;
 
     private String titulo;
-    private int año;
+    private int year;
     private int duracion; //en minutos
     private String director;
 
@@ -74,12 +74,12 @@ public class PeliculaEntity {
         this.titulo = titulo;
     }
 
-    public int getAño() {
-        return año;
+    public int getyear() {
+        return year;
     }
 
-    public void setAño(int año) {
-        this.año = año;
+    public void setyear(int year) {
+        this.year = year;
     }
 
     public int getDuracion() {

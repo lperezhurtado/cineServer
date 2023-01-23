@@ -6,7 +6,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.OneToMany;
-import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -57,10 +56,9 @@ public class TipoUsuarioEntity {
     public int getUsuariosCount() {
         return usuarios.size();
     }
-
-    @PreRemove
-    public void nullify() {
-        this.usuarios.forEach(c -> c.setTipousuario(null));
+    //Modificado para que cuando se elimine un tipoUsuario, todos los usuarios con ese tipoU pasen a ser tipousuario = 2
+    public void nullify(TipoUsuarioEntity tipoUnew) {
+            this.usuarios.forEach(c -> c.setTipousuario(tipoUnew));
     }
 
 }

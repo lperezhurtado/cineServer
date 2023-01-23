@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,10 +45,10 @@ public class TipoUsuarioControl {
         return new ResponseEntity<Long>(tipoUsuarioService.count(), HttpStatus.OK);
     }
 
-    /*@PostMapping("/")
+    @PostMapping("/")
     public ResponseEntity<Long> create(@RequestBody TipoUsuarioEntity newTipoUsuarioEntity) {
         return new ResponseEntity<Long>(tipoUsuarioService.create(newTipoUsuarioEntity), HttpStatus.OK);
-    }*/
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable(value = "id") Long id) {

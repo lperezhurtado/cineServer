@@ -49,7 +49,6 @@ public class GeneroControl {
     //GET (R)
     @GetMapping("/{id}")
     public ResponseEntity<GeneroEntity> get(@PathVariable(value = "id") Long id) {
-
         return new ResponseEntity<GeneroEntity>(generoService.get(id), HttpStatus.OK);
     }
     //UPDATE (U)

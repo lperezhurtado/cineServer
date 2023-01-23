@@ -53,7 +53,7 @@ public class PeliculaControl {
 
     //CREATE CON IMAGEN
     @PostMapping("/")
-    public ResponseEntity<Long> create(@RequestParam("pelicula") String pelicula, @RequestParam("fichero") MultipartFile multipartfile ) {
+    public ResponseEntity<Long> create(@RequestParam(name="pelicula", required = false) String pelicula, @RequestParam(name="fichero") MultipartFile multipartfile ) {
         return new ResponseEntity<Long>(peliculaService.create(pelicula, multipartfile), HttpStatus.OK);
     }
 
@@ -76,7 +76,7 @@ public class PeliculaControl {
 
     //UPDATE CON IMAGEN (U)
     @PutMapping("")
-    public ResponseEntity<Long> update(@RequestParam("pelicula") String updatedPelicula, @RequestParam("fichero") MultipartFile multipartfile) {
+    public ResponseEntity<Long> update(@RequestParam(name = "pelicula") String updatedPelicula, @RequestParam(name="fichero", required = false) MultipartFile multipartfile) {
         return new ResponseEntity<Long>(peliculaService.update(updatedPelicula, multipartfile), HttpStatus.OK);
     }
 

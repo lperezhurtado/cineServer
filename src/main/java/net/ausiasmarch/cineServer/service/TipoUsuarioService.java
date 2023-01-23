@@ -13,6 +13,9 @@ import net.ausiasmarch.cineServer.repository.TipoUsuarioRepository;
 public class TipoUsuarioService {
 
     @Autowired
+    AuthService authService;
+
+    @Autowired
     TipoUsuarioRepository tipoUsuarioRepo;
 
     public void validate(Long id) {
@@ -23,32 +26,44 @@ public class TipoUsuarioService {
 
     //GET Method
     public TipoUsuarioEntity get(Long id) {
+        authService.onlyAdmins();
         validate(id);
         return tipoUsuarioRepo.getReferenceById(id);
     }
 
     public Long count() {
+        authService.onlyAdmins();
         return tipoUsuarioRepo.count();
     }
 
     public Page<TipoUsuarioEntity> getPage(Pageable pageable) {
-
+        authService.onlyAdmins();
         Page<TipoUsuarioEntity> page = tipoUsuarioRepo.findAll(pageable);
 
         return page;
     } 
 
     public Long create(TipoUsuarioEntity newTipoUsuario) {
+        authService.onlyAdmins();
         newTipoUsuario.setId(0L);
         return tipoUsuarioRepo.save(newTipoUsuario).getId();
     }
 
     public Long delete(Long id) {
+        authService.onlyAdmins();
+        validate(id);
+        TipoUsuarioEntity tipoU = tipoUsuarioRepo.getReferenceById(id);
+        //si hay usuarios con el tipousuario a borrar, se cambiarán a tipousuario = 2
+        if (tipoU.getUsuariosCount() != 0) {
+            TipoUsuarioEntity tipoUNew = tipoUsuarioRepo.getReferenceById(2L);
+            tipoU.nullify(tipoUNew);
+        }
         tipoUsuarioRepo.deleteById(id);
         return id;
     }
 
     public Long update(TipoUsuarioEntity tipoUsuarioEntity) {
+        authService.onlyAdmins();
         return tipoUsuarioRepo.save(tipoUsuarioEntity).getId();
     }
 }
