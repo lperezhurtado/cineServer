@@ -94,17 +94,17 @@ public class ValidationHelper {
         }
     }
 
-    public static void validateRange(int iNumber, int iMin, int iMax, String error) {
+    public static void validateIntRange(int iNumber, int iMin, int iMax, String error) {
         if (iNumber >= iMin && iNumber <= iMax) {
         } else {
             throw new ValidationException("error de validación: " + error);
         }
     }
 
-    public static void validateRange(double iNumber, double iMin, double iMax, String error) {
+    public static void validateDoubleRange(double iNumber, double iMin, double iMax, String error) {
         if (iNumber >= iMin && iNumber <= iMax) {
         } else {
-            throw new ValidationException("error de validación: " + error);
+            throw new ValidationException("Error: " + error);
         }
     }
 

@@ -47,9 +47,9 @@ public class TipoSalaEntity {
         this.nombre = nombre;
     }
 
-    public List<SalaEntity> getSalas() {
+    /*public List<SalaEntity> getSalas() {
         return salas;
-    }
+    }*/
 
     public int getSalasCount() {
         return salas.size();

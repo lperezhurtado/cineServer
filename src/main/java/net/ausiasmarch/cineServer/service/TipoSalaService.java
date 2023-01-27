@@ -18,7 +18,7 @@ public class TipoSalaService {
     @Autowired
     AuthService authService;
 
-    public void validate(Long id) {
+    public void validateID(Long id) {
         if (!tipoSalaRepo.existsById(id)) {
             throw new ResourceNotFound("No existe este tipo de Sala");
         }
@@ -26,7 +26,7 @@ public class TipoSalaService {
 
     //GET Method
     public TipoSalaEntity get(Long id) {
-        validate(id);
+        validateID(id);
         return tipoSalaRepo.getReferenceById(id);
     }
 
@@ -37,10 +37,9 @@ public class TipoSalaService {
 
     //GET PAGE METHOD
     public Page<TipoSalaEntity> getPage(Pageable pageable, String filter) {
-
         Page<TipoSalaEntity> page;
 
-        if (filter.equals(null) || filter.trim().isEmpty()) {
+        if (filter == null || filter.trim().isEmpty()) {
             page = tipoSalaRepo.findAll(pageable);
         }
         else{
@@ -58,13 +57,15 @@ public class TipoSalaService {
 
     //UPDATE METHOD
     public Long update(TipoSalaEntity tipoSalaEntity) {
-        validate(tipoSalaEntity.getId());
-        return tipoSalaRepo.save(tipoSalaEntity).getId();
+        validateID(tipoSalaEntity.getId());
+        TipoSalaEntity tipoSala = tipoSalaRepo.getReferenceById(tipoSalaEntity.getId());
+        tipoSala.setNombre(tipoSalaEntity.getNombre());
+        return tipoSalaRepo.save(tipoSala).getId();
     }
 
     //DELETE METHOD
     public Long delete(Long id) {
-        validate(id);
+        validateID(id);
         tipoSalaRepo.deleteById(id);
         return id;
     }

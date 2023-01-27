@@ -26,7 +26,7 @@ public class EntradaEntity {
 
     private int ejeX;
     private int ejeY;
-    private boolean ocupada;
+    private boolean libre;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_sesion")
@@ -68,12 +68,12 @@ public class EntradaEntity {
         this.ejeY = ejeY;
     }
 
-    public boolean isOcupada() {
-        return ocupada;
+    public boolean isLibre() {
+        return libre;
     }
 
-    public void setOcupada(boolean ocupada) {
-        this.ocupada = ocupada;
+    public void setLibre(boolean libre) {
+        this.libre = libre;
     }
 
     public SesionEntity getSesion() {

@@ -1,8 +1,7 @@
 package net.ausiasmarch.cineServer.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -27,8 +27,8 @@ public class SesionEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate fecha;
-    private LocalTime hora;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private LocalDateTime fechaHora;
     
     @OneToMany(mappedBy = "sesion", fetch = FetchType.LAZY)
     private final List<EntradaEntity> entradas;
@@ -61,26 +61,18 @@ public class SesionEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public LocalDate getFecha() {
-        return fecha;
+    
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
     }
 
-    public LocalTime getHora() {
-        return hora;
-    }
-
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
-    }
-
-    public List<EntradaEntity> getEntradas() {
+    /*public List<EntradaEntity> getEntradas() {
         return entradas;
-    }
+    }*/
 
     public int getEntradasCount() {
         return entradas.size();

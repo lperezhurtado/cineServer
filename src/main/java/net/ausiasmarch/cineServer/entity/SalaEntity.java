@@ -11,9 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "sala")
@@ -32,6 +34,7 @@ public class SalaEntity {
     private TipoSalaEntity tipoSala;
 
     @OneToMany(mappedBy = "sala", fetch = FetchType.LAZY)
+    @JsonIgnore
     private final List<SesionEntity> sesiones;
 
 
@@ -76,12 +79,16 @@ public class SalaEntity {
         this.tipoSala = tipoSala;
     }
 
-    public List<SesionEntity> getSesiones() {
+    /*public List<SesionEntity> getSesiones() {
         return sesiones;
-    }
+    }*/
 
-    public int getSesionesCOunt() {
+    public int getSesionesCount() {
         return sesiones.size();
     }
-    
+
+    @PreRemove
+    public void nullify() {
+        this.sesiones.forEach(c -> c.setSala(null));
+    }
 }

@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "pelicula")
@@ -47,6 +48,7 @@ public class PeliculaEntity {
     private String imagen;
 
     @OneToMany(mappedBy = "pelicula" , fetch = FetchType.LAZY)
+    @JsonIgnore
     private final List<SesionEntity> sesiones;
 
     public PeliculaEntity() {

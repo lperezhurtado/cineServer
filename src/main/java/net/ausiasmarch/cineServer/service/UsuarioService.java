@@ -70,7 +70,7 @@ public class UsuarioService {
             }
         }
         
-        ValidationHelper.validateRange(usuarioEntity.getDescuento(), 0, 100, "campo Descuento de la entidad Usuario (debe ser un entero entre 0 y 100)");
+        ValidationHelper.validateIntRange(usuarioEntity.getDescuento(), 0, 100, "campo Descuento de la entidad Usuario (debe ser un entero entre 0 y 100)");
         tipoUsuarioService.validate(usuarioEntity.getTipousuario().getId());
     }
 

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -26,10 +27,16 @@ public class TarifaEntity {
     private double precio;
 
     @OneToMany(mappedBy = "tarifa", fetch = FetchType.LAZY)
+    @JsonIgnore
     private final List<SesionEntity> sesiones;
 
     public TarifaEntity() {
         this.sesiones = new ArrayList<>();
+    }
+
+    public TarifaEntity(Long id) {
+        this.sesiones = new ArrayList<>();
+        this.id = id;
     }
 
     public Long getId() {
@@ -54,10 +61,6 @@ public class TarifaEntity {
 
     public void setPrecio(double precio) {
         this.precio = precio;
-    }
-
-    public List<SesionEntity> getSesiones() {
-        return sesiones;
     }
 
     public int getSesionesCount() {

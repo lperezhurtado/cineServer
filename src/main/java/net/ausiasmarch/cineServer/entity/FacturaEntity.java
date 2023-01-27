@@ -86,5 +86,4 @@ public class FacturaEntity {
         return this.compras.size();
     }
 
-    
 }
