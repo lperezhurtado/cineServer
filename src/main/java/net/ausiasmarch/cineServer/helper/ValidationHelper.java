@@ -118,9 +118,9 @@ public class ValidationHelper {
         }
     }
 
-    public static void validateFechaBaja(LocalDateTime fechaAlta, LocalDateTime fechaBaja) {
+    public static void validateFechaFinal(LocalDateTime fechaAlta, LocalDateTime fechaBaja, String error) {
         if( fechaBaja != null && Duration.between(fechaAlta, fechaBaja).isNegative() ) {
-            throw new ValidationException("Fecha de baja no puede ser anterior a la fecha de alta");    
+            throw new ValidationException(error);    
         }  
     }
 }

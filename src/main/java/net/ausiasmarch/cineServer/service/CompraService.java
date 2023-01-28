@@ -21,7 +21,7 @@ public class CompraService {
 
     public void validateID(Long id) {
         if (!compraRepo.existsById(id)) {
-            throw new ResourceNotFound("No se encuentra sala con id " +id);
+            throw new ResourceNotFound("No se encuentra compra con id " +id);
         }
     }
 

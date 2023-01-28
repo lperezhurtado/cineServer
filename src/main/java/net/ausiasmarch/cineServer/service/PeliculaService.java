@@ -1,14 +1,25 @@
 package net.ausiasmarch.cineServer.service;
 
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+//import com.google.gson.JsonSerializer;
 
 import org.springframework.util.StringUtils;
 
@@ -48,7 +59,7 @@ public class PeliculaService {
         ValidationHelper.validateInt(peliculaEntity.getyear(),1950,2025, "Año no válido");
         ValidationHelper.validateInt(peliculaEntity.getDuracion(), 30, 230, "Duración no válida");
         ValidationHelper.validateStringLength(peliculaEntity.getDirector(), 2, 45, "Nombre no válido");
-        ValidationHelper.validateFechaBaja(peliculaEntity.getFechaAlta(), peliculaEntity.getFechaBaja()); //Valida que la fecha de baja NO sea inferior a la de alta
+        ValidationHelper.validateFechaFinal(peliculaEntity.getFechaAlta(), peliculaEntity.getFechaBaja(), "Fecha de baja no puede ser anterior a la fecha de alta"); //Valida que la fecha de baja NO sea inferior a la de alta
         generoService.validate(peliculaEntity.getGenero().getId());
     }
 
@@ -71,11 +82,18 @@ public class PeliculaService {
         String sufix = RandomHelper.dateLong().toString();
         String uniqueFileName = sufix+"-"+fileName;
 
-        Gson gson = new Gson();
-        PeliculaEntity pelicula = gson.fromJson(newPelicula, PeliculaEntity.class); //convierte el String a UsuarioEntity
+        //SOLUCION ENCONTRADA EN
+        //https://stackoverflow.com/questions/22310143/java-8-localdatetime-deserialized-using-gson
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() { 
+            @Override 
+            public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException { 
+                return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")); }
+            }).create();
 
+        PeliculaEntity pelicula = gson.fromJson(newPelicula, PeliculaEntity.class); //convierte el String a UsuarioEntity
         validatePelicula(pelicula);
         pelicula.setId(0L);
+        pelicula.setFechaAlta(pelicula.getFechaAlta().plusHours(2));
         pelicula.setImagen(uniqueFileName); //Se guarda el nombre de la imagen en newPelicula
         
         FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la imagen en la carpeta images/peliculas

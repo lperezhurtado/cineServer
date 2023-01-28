@@ -28,19 +28,19 @@ public class CompraControl {
     @Autowired
     CompraService compraService;
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<CompraEntity> get(@PathVariable(value="id") Long id) {
         return new ResponseEntity<>(compraService.get(id), HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<Long> create(@RequestBody CompraEntity newUsuario) {
-        return new ResponseEntity<Long>(compraService.create(newUsuario), HttpStatus.OK);
+    public ResponseEntity<Long> create(@RequestBody CompraEntity newCompra) {
+        return new ResponseEntity<Long>(compraService.create(newCompra), HttpStatus.OK);
     }
 
     @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody CompraEntity updatedUsuario) {
-        return new ResponseEntity<Long>(compraService.update(updatedUsuario), HttpStatus.OK);
+    public ResponseEntity<Long> update(@RequestBody CompraEntity updatedCompra) {
+        return new ResponseEntity<Long>(compraService.update(updatedCompra), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
