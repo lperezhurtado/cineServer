@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 import net.ausiasmarch.cineServer.entity.PeliculaEntity;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotFound;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotModified;
-import net.ausiasmarch.cineServer.exceptions.ValidationException;
+//import net.ausiasmarch.cineServer.exceptions.ValidationException;
 import net.ausiasmarch.cineServer.helper.FileHelper;
 import net.ausiasmarch.cineServer.helper.RandomHelper;
 import net.ausiasmarch.cineServer.helper.ValidationHelper;
@@ -75,13 +75,12 @@ public class PeliculaService {
     //CREATE CON IMAGEN
     public Long create(String newPelicula, MultipartFile multipartfile) {
         authService.onlyAdmins();
-
-        String fileName = StringUtils.cleanPath(multipartfile.getOriginalFilename()); //Obtenemos el nombre del fichero
-        String uploadDir = "src/images/peliculas"; //Establecemos el directorio donde se subiran nuestros ficheros  
-
-        String sufix = RandomHelper.dateLong().toString();
-        String uniqueFileName = sufix+"-"+fileName;
-
+        System.out.println("entra al Service");
+        String fileName;
+        String uploadDir = "";
+        String sufix;
+        String uniqueFileName = "";
+    
         //SOLUCION ENCONTRADA EN
         //https://stackoverflow.com/questions/22310143/java-8-localdatetime-deserialized-using-gson
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() { 
@@ -93,11 +92,23 @@ public class PeliculaService {
         PeliculaEntity pelicula = gson.fromJson(newPelicula, PeliculaEntity.class); //convierte el String a UsuarioEntity
         validatePelicula(pelicula);
         pelicula.setId(0L);
-        pelicula.setFechaAlta(pelicula.getFechaAlta().plusHours(2));
-        pelicula.setImagen(uniqueFileName); //Se guarda el nombre de la imagen en newPelicula
+        pelicula.setFechaAlta(pelicula.getFechaAlta().plusHours(2)); //Le he sumado 2 horas porque el dato recibido de cliente se guarda con 2 horas menos
         
-        FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la imagen en la carpeta images/peliculas
+        //Comprueba se hay imagen, sino, setea NoImage como imagen de la entity
+        if (multipartfile != null) {
+            fileName = StringUtils.cleanPath(multipartfile.getOriginalFilename()); //Obtenemos el nombre del fichero
+            uploadDir = "src/images/peliculas"; //Establecemos el directorio donde se subiran nuestros ficheros  
 
+            sufix = RandomHelper.dateLong().toString();
+            uniqueFileName = sufix+"-"+fileName;
+
+            pelicula.setImagen(uniqueFileName); //Se guarda el nombre de la imagen en newPelicula
+            FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la imagen en la carpeta images/peliculas
+        } else {
+            uniqueFileName = "NoImage.jpg";
+            pelicula.setImagen(uniqueFileName);
+        }
+        System.out.println("salta el if");
         return peliculaRepo.save(pelicula).getId();
     }
 
@@ -168,9 +179,9 @@ public class PeliculaService {
             FileHelper.deleteImage(uploadDir, actualImage); //Borra la imagen anterior
 
             actualPelicula.setImagen(uniqueFileName); //actualiza el nombre de imagen
-        } else {
+        }/*else {
             throw new ValidationException("no hay imagen");
-        }
+        }*/
         return peliculaRepo.save(actualPelicula).getId();
     } 
 
@@ -181,7 +192,7 @@ public class PeliculaService {
         PeliculaEntity deletedPelicula = peliculaRepo.getReferenceById(id);
         String imagen = deletedPelicula.getImagen();
         String uploadDir = "src/images/peliculas";
-        FileHelper.deleteImage(uploadDir, imagen);
+        FileHelper.deleteImage(uploadDir, imagen); //borra imagen asociada
         peliculaRepo.deleteById(id);
 
         if(peliculaRepo.existsById(id)) {
@@ -200,7 +211,7 @@ public class PeliculaService {
     //GETPAGE Method
     public Page<PeliculaEntity> getPage(Pageable pageable, String filter, Long id_genero) {
         
-        if (filter == null || filter.length() == 0) {
+        /*if (filter == null || filter.length() == 0) {
             if (id_genero == null) {
                 return peliculaRepo.findAll(pageable);
             } else {
@@ -213,22 +224,22 @@ public class PeliculaService {
                 return peliculaRepo.findByTituloIgnoreCaseContainingOrDirectorIgnoreCaseContainingAndGeneroId(filter, filter, id_genero, pageable);
             }
             
-        }
+        }*/
 
         //REVISAR ESTRUCTURA DE GETPAGE
 
-        /*if( filter.isBlank() && !id_genero.equals(null) ) {
+        if( filter == null && id_genero != null ) {
             return peliculaRepo.findByGeneroId(id_genero, pageable);
         }
-        else if( !filter.isBlank() && id_genero.equals(null) ) {
+        else if( filter != null && id_genero == null ) {
             return peliculaRepo.findByTituloIgnoreCaseContainingOrDirectorIgnoreCaseContaining(filter, filter, pageable);
         }
-        else if( !filter.isBlank() && !id_genero.equals(null) ) {
+        else if( filter != null && id_genero != null ) {
             return peliculaRepo.findByTituloIgnoreCaseContainingOrDirectorIgnoreCaseContainingAndGeneroId(filter, filter, id_genero, pageable);
         }
         else {
             return peliculaRepo.findAll(pageable);
-        }*/
+        }
     }
     
 }

@@ -31,6 +31,7 @@ public class PeliculaEntity {
     private int year;
     private int duracion; //en minutos
     private String director;
+    private String sinopsis;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime fechaAlta;
@@ -98,6 +99,14 @@ public class PeliculaEntity {
 
     public void setDirector(String director) {
         this.director = director;
+    }
+
+    public String getSinopsis() {
+        return sinopsis;
+    }
+
+    public void setSinopsis(String sinopsis) {
+        this.sinopsis = sinopsis;
     }
 
     public LocalDateTime getFechaAlta() {

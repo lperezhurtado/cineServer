@@ -53,7 +53,7 @@ public class PeliculaControl {
 
     //CREATE CON IMAGEN
     @PostMapping("/")
-    public ResponseEntity<Long> create(@RequestParam(name="pelicula", required = false) String pelicula, @RequestParam(name="fichero") MultipartFile multipartfile ) {
+    public ResponseEntity<Long> create(@RequestParam(name="pelicula") String pelicula, @RequestParam(name="fichero", required = false) MultipartFile multipartfile ) {
         return new ResponseEntity<Long>(peliculaService.create(pelicula, multipartfile), HttpStatus.OK);
     }
 
