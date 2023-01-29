@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 import net.ausiasmarch.cineServer.entity.PeliculaEntity;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotFound;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotModified;
-//import net.ausiasmarch.cineServer.exceptions.ValidationException;
+import net.ausiasmarch.cineServer.exceptions.ValidationException;
 import net.ausiasmarch.cineServer.helper.FileHelper;
 import net.ausiasmarch.cineServer.helper.RandomHelper;
 import net.ausiasmarch.cineServer.helper.ValidationHelper;
@@ -75,7 +75,7 @@ public class PeliculaService {
     //CREATE CON IMAGEN
     public Long create(String newPelicula, MultipartFile multipartfile) {
         authService.onlyAdmins();
-        System.out.println("entra al Service");
+
         String fileName;
         String uploadDir = "";
         String sufix;
@@ -108,7 +108,6 @@ public class PeliculaService {
             uniqueFileName = "NoImage.jpg";
             pelicula.setImagen(uniqueFileName);
         }
-        System.out.println("salta el if");
         return peliculaRepo.save(pelicula).getId();
     }
 
@@ -150,7 +149,12 @@ public class PeliculaService {
     public Long update(String updatedPelicula, MultipartFile multipartfile ) {
         authService.onlyAdmins();
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() { 
+            @Override 
+            public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException { 
+                return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")); }
+            }).create();
+
         PeliculaEntity pelicula = gson.fromJson(updatedPelicula, PeliculaEntity.class);
         validateID(pelicula.getId());
         validatePelicula(pelicula);
@@ -160,13 +164,14 @@ public class PeliculaService {
         actualPelicula.setyear(pelicula.getyear());
         actualPelicula.setDuracion(pelicula.getDuracion());
         actualPelicula.setDirector(pelicula.getDirector());
+        actualPelicula.setSinopsis(pelicula.getSinopsis());
         actualPelicula.setFechaAlta(actualPelicula.getFechaAlta());
         actualPelicula.setFechaBaja(pelicula.getFechaBaja());
         actualPelicula.setVersionNormal(pelicula.isVersionNormal());
         actualPelicula.setVersionEspecial(pelicula.isVersionEspecial());
         actualPelicula.setGenero(generoService.get(pelicula.getGenero().getId()));
 
-        if(multipartfile.getOriginalFilename() != "" || multipartfile.getOriginalFilename() != null) {
+        if(multipartfile != null) {
             String fileName = StringUtils.cleanPath(multipartfile.getOriginalFilename()); //Obtenemos el nombre del fichero
             String uploadDir = "src/images/peliculas";
 
@@ -176,12 +181,16 @@ public class PeliculaService {
             String actualImage = actualPelicula.getImagen();
             
             FileHelper.saveFile(uploadDir, uniqueFileName, multipartfile); //Guarda la nueva imagen
-            FileHelper.deleteImage(uploadDir, actualImage); //Borra la imagen anterior
 
+            if (!actualImage.contains("NoImage")) {
+                FileHelper.deleteImage(uploadDir, actualImage); //Borra la imagen anterior
+            }
+    
             actualPelicula.setImagen(uniqueFileName); //actualiza el nombre de imagen
-        }/*else {
-            throw new ValidationException("no hay imagen");
-        }*/
+        }else {
+            //throw new ValidationException("no hay imagen");
+            actualPelicula.setImagen(actualPelicula.getImagen());
+        }
         return peliculaRepo.save(actualPelicula).getId();
     } 
 
@@ -191,8 +200,11 @@ public class PeliculaService {
         validateID(id);
         PeliculaEntity deletedPelicula = peliculaRepo.getReferenceById(id);
         String imagen = deletedPelicula.getImagen();
-        String uploadDir = "src/images/peliculas";
-        FileHelper.deleteImage(uploadDir, imagen); //borra imagen asociada
+
+        if (!imagen.contains("NoImage")) {
+            String uploadDir = "src/images/peliculas";
+            FileHelper.deleteImage(uploadDir, imagen); //borra imagen asociada
+        }
         peliculaRepo.deleteById(id);
 
         if(peliculaRepo.existsById(id)) {
