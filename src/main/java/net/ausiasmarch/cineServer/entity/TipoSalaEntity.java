@@ -24,7 +24,7 @@ public class TipoSalaEntity {
 
     private String nombre;
 
-    @OneToMany(mappedBy = "tipoSala", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tiposala", fetch = FetchType.LAZY)
     private final List<SalaEntity> salas;
 
     public TipoSalaEntity() {

@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 import net.ausiasmarch.cineServer.entity.PeliculaEntity;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotFound;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotModified;
-import net.ausiasmarch.cineServer.exceptions.ValidationException;
+//import net.ausiasmarch.cineServer.exceptions.ValidationException;
 import net.ausiasmarch.cineServer.helper.FileHelper;
 import net.ausiasmarch.cineServer.helper.RandomHelper;
 import net.ausiasmarch.cineServer.helper.ValidationHelper;

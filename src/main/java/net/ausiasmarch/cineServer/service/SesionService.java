@@ -13,12 +13,12 @@ import net.ausiasmarch.cineServer.entity.SesionEntity;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotFound;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotModified;
 import net.ausiasmarch.cineServer.exceptions.ValidationException;
-import net.ausiasmarch.cineServer.helper.RandomHelper;
+//import net.ausiasmarch.cineServer.helper.RandomHelper;
 import net.ausiasmarch.cineServer.helper.ValidationHelper;
 import net.ausiasmarch.cineServer.repository.EntradaRepository;
 import net.ausiasmarch.cineServer.repository.SesionRepository;
 
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -58,6 +58,35 @@ public class SesionService {
         return sesionRepo.count();
     }
     //GETPAGE revisar por si acaso
+    /*public Page<SesionEntity> getPage(Pageable pageable, Long id_sala, Long id_pelicula, Long id_tarifa) {
+        ValidationHelper.validateRPP(pageable.getPageSize());
+
+        if (id_sala == null && id_pelicula != null && id_tarifa != null) {
+            return sesionRepo.findByPeliculaIdAndTarifaId(id_pelicula, id_tarifa, pageable);
+        }
+        else if(id_sala != null && id_pelicula != null && id_tarifa == null) {
+            return sesionRepo.findBySalaIdAndPeliculaId(id_sala, id_pelicula, pageable);
+        }
+        else if(id_sala != null && id_pelicula == null && id_tarifa != null) {
+            return sesionRepo.findBySalaIdAndTarifaId(id_sala, id_tarifa, pageable);
+        }
+        else if(id_sala != null && id_pelicula != null && id_tarifa != null) {
+            return sesionRepo.findBySalaIdAndPeliculaIdAndTarifaId(id_sala, id_pelicula, id_tarifa, pageable);
+        }
+        else if(id_sala != null && id_pelicula == null && id_tarifa == null) {
+            return sesionRepo.findBySalaId(id_sala, pageable);
+        }
+        else if(id_sala == null && id_pelicula != null && id_tarifa == null) {
+            return sesionRepo.findByPeliculaId(id_pelicula, pageable);
+        }
+        else if(id_sala == null && id_pelicula == null && id_tarifa != null) {
+            return sesionRepo.findByTarifaId(id_tarifa, pageable);
+        }
+        else{
+            return sesionRepo.findAll(pageable);
+        }
+    }*/    
+    //GETPAGE CON FILTRO revisar por si acaso
     public Page<SesionEntity> getPage(Pageable pageable, Long id_sala, Long id_pelicula, Long id_tarifa) {
         ValidationHelper.validateRPP(pageable.getPageSize());
 
@@ -85,7 +114,7 @@ public class SesionService {
         else{
             return sesionRepo.findAll(pageable);
         }
-    }    
+    }
 
     public SesionEntity get(Long id) {
         validateID(id);
@@ -96,13 +125,14 @@ public class SesionService {
     public Long create(SesionEntity newSesion) {
         authService.onlyAdmins();
         validateSesion(newSesion);
+        newSesion.setFechaHora(newSesion.getFechaHora().plusHours(2));
 
         SalaEntity sala = salaService.get(newSesion.getSala().getId());
         int anchoSala = sala.getAncho();
         int altoSala = sala.getAlto();
         Long idSesion = sesionRepo.save(newSesion).getId(); //AQUI GUARDA LA SESION Y LUEGO DEVULVE EL ID
 
-        crearEntradas(anchoSala, altoSala, idSesion);
+        crearEntradas(anchoSala, altoSala, idSesion); //crea entradas asociadas a la sesion
         return idSesion;
     }
 
@@ -154,12 +184,14 @@ public class SesionService {
     //Cuando se borre una sesion, se llamará a este método para borrar las entradas asociadas a la sesión borrada
     public void borrarEntradas(Long id_sesion) {
 
-        SesionEntity sesion = sesionRepo.getReferenceById(id_sesion);
+        //SesionEntity sesion = sesionRepo.getReferenceById(id_sesion);
 
-        LocalDateTime now = RandomHelper.randomDate();
-        LocalDateTime fechaSesion = sesion.getFechaHora();
-        ValidationHelper.validateFechaFinal(now, fechaSesion, "No se puede eliminar la sesión, hay entradas vendidas.");
-
+        //LocalDateTime now = RandomHelper.randomDate();
+        //LocalDateTime fechaSesion = sesion.getFechaHora();
+        //ValidationHelper.validateFechaFinal(now, fechaSesion, "No se puede eliminar la sesión, hay entradas vendidas.");
+        /*if(sesion.getEntradasCount() != 0) {
+            throw new ValidationException("No se puede eliminar la sesión, hay entradas vendidas.");
+        }*/
         List<EntradaEntity> entradas = entradaRepo.findBySesionId(id_sesion);
         
         for (int i = 0; i < entradas.size(); i++) {

@@ -31,7 +31,7 @@ public class SalaEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tiposala")
-    private TipoSalaEntity tipoSala;
+    private TipoSalaEntity tiposala;
 
     @OneToMany(mappedBy = "sala", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -72,11 +72,11 @@ public class SalaEntity {
     }
 
     public TipoSalaEntity getTiposala() {
-        return tipoSala;
+        return tiposala;
     }
 
-    public void setTipoSala(TipoSalaEntity tipoSala) {
-        this.tipoSala = tipoSala;
+    public void setTipoSala(TipoSalaEntity tiposala) {
+        this.tiposala = tiposala;
     }
 
     /*public List<SesionEntity> getSesiones() {
