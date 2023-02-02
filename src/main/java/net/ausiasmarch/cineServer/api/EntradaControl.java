@@ -1,5 +1,7 @@
 package net.ausiasmarch.cineServer.api;
 
+import java.util.List;
+
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,6 +56,14 @@ public class EntradaControl {
         @RequestParam(value = "sesion", required = false) Long id_sesion
         ) {
         return new ResponseEntity<Page<EntradaEntity>>(entradaService.getPage(pageable, id_sesion), HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<EntradaEntity>> getList(
+        //@ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable,
+        @RequestParam(value = "sesion", required = false) Long id_sesion
+        ) {
+        return new ResponseEntity<List<EntradaEntity>>(entradaService.getList(id_sesion), HttpStatus.OK);
     }
     
 }

@@ -2,6 +2,9 @@ package net.ausiasmarch.cineServer.service;
 
 import javax.transaction.Transactional;
 
+//import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +57,14 @@ public class EntradaService {
             return entradaRepo.findAll(pageable);
         } else {
             return entradaRepo.findBySesionId(id_sesion, pageable);
+        }
+    }
+
+    public List<EntradaEntity> getList(Long id_sesion) {
+        if (id_sesion == null) {
+            return entradaRepo.findAll();
+        } else {
+            return entradaRepo.findBySesionId(id_sesion);
         }
     }
 
