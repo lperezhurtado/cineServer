@@ -223,7 +223,7 @@ public class PeliculaService {
     //GETPAGE Method
     public Page<PeliculaEntity> getPage(Pageable pageable, String filter, Long id_genero) {
         
-        /*if (filter == null || filter.length() == 0) {
+        if (filter == null || filter.length() == 0) {
             if (id_genero == null) {
                 return peliculaRepo.findAll(pageable);
             } else {
@@ -236,11 +236,11 @@ public class PeliculaService {
                 return peliculaRepo.findByTituloIgnoreCaseContainingOrDirectorIgnoreCaseContainingAndGeneroId(filter, filter, id_genero, pageable);
             }
             
-        }*/
+        }
 
         //REVISAR ESTRUCTURA DE GETPAGE
 
-        if( filter == null && id_genero != null ) {
+        /*if( filter == null && id_genero != null ) {
             return peliculaRepo.findByGeneroId(id_genero, pageable);
         }
         else if( filter != null && id_genero == null ) {
@@ -251,7 +251,7 @@ public class PeliculaService {
         }
         else {
             return peliculaRepo.findAll(pageable);
-        }
+        }*/
     }
     
 }
