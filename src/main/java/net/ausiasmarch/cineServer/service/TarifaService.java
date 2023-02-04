@@ -74,8 +74,14 @@ public class TarifaService {
         return tarifaRepo.count();
     }
 
-    public Page<TarifaEntity> getPage(Pageable pageable) {
-        Page<TarifaEntity> page = tarifaRepo.findAll(pageable);
-        return page;
+    public Page<TarifaEntity> getPage(Pageable pageable, String filter) {
+
+        if(filter == null || filter.length() == 0) {
+            return tarifaRepo.findAll(pageable);
+        } else {
+            return tarifaRepo.findByNombreIgnoreCaseContaining( filter, pageable);
+        }
+        
+        
     }
 }

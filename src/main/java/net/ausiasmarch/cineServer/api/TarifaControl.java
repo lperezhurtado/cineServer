@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.cineServer.entity.TarifaEntity;
@@ -34,9 +35,10 @@ public class TarifaControl {
 
     @GetMapping("")
     public ResponseEntity<Page<TarifaEntity>> getPage(
-        @ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable
+        @ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable,
+        @RequestParam(name = "filter", required = false) String filter
         ) {
-        return new ResponseEntity<Page<TarifaEntity>>(tarifaService.getPage(pageable), HttpStatus.OK);
+        return new ResponseEntity<Page<TarifaEntity>>(tarifaService.getPage(pageable, filter), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
