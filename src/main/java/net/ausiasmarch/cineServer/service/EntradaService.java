@@ -2,7 +2,6 @@ package net.ausiasmarch.cineServer.service;
 
 import javax.transaction.Transactional;
 
-//import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +14,10 @@ import net.ausiasmarch.cineServer.entity.EntradaEntity;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotFound;
 import net.ausiasmarch.cineServer.exceptions.ResourceNotModified;
 import net.ausiasmarch.cineServer.repository.EntradaRepository;
-
 @Service
 public class EntradaService {
-    
     @Autowired
     AuthService authService;
-
     @Autowired
     EntradaRepository entradaRepo;
 
@@ -31,7 +27,6 @@ public class EntradaService {
     //@Autowired
     //SesionService sesionService;
 
-
     public void validateID(Long id) {
         if (!entradaRepo.existsById(id)) {
             throw new ResourceNotFound("No se encuentra butaca con id  " + id);
@@ -39,8 +34,7 @@ public class EntradaService {
     }
 
     public void validateCoor(int x, int y, int fila, int col) {
-        
-
+    
         //entrada.getSesion().getId().get;
     }
 
@@ -103,5 +97,4 @@ public class EntradaService {
             return id;
         }
     }
-    
 }

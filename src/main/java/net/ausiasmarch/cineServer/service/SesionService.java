@@ -125,7 +125,7 @@ public class SesionService {
     public Long create(SesionEntity newSesion) {
         authService.onlyAdmins();
         validateSesion(newSesion);
-        newSesion.setFechaHora(newSesion.getFechaHora().plusHours(2));
+        newSesion.setFechaHora(newSesion.getFechaHora().plusHours(0));
 
         SalaEntity sala = salaService.get(newSesion.getSala().getId());
         int anchoSala = sala.getAncho();

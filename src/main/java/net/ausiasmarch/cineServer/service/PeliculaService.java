@@ -92,7 +92,7 @@ public class PeliculaService {
         PeliculaEntity pelicula = gson.fromJson(newPelicula, PeliculaEntity.class); //convierte el String a UsuarioEntity
         validatePelicula(pelicula);
         pelicula.setId(0L);
-        pelicula.setFechaAlta(pelicula.getFechaAlta().plusHours(2)); //Le he sumado 2 horas porque el dato recibido de cliente se guarda con 2 horas menos
+        pelicula.setFechaAlta(pelicula.getFechaAlta().plusHours(0)); //Le he sumado 2 horas porque el dato recibido de cliente se guarda con 2 horas menos
         
         //Comprueba se hay imagen, sino, setea NoImage como imagen de la entity
         if (multipartfile != null) {

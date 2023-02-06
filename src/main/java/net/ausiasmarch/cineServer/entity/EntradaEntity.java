@@ -84,9 +84,9 @@ public class EntradaEntity {
         this.sesion = sesion;
     }
 
-    public List<CompraEntity> getCompras() {
+    /*public List<CompraEntity> getCompras() {
         return compras;
-    }
+    }*/
 
     public int getComprasCount() {
         return compras.size();

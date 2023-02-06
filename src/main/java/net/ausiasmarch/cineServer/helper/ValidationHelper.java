@@ -97,7 +97,13 @@ public class ValidationHelper {
     public static void validateIntRange(int iNumber, int iMin, int iMax, String error) {
         if (iNumber >= iMin && iNumber <= iMax) {
         } else {
-            throw new ValidationException("error de validación: " + error);
+            throw new ValidationException("Error: " + error);
+        }
+    }
+
+    public static void validatePrecio(double precio, double precio2, String error) {
+        if(precio != precio2) {
+            throw new ValidationException("Error: " + error);
         }
     }
 
