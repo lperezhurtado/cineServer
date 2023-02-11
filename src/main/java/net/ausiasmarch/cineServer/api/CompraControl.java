@@ -43,6 +43,11 @@ public class CompraControl {
         return new ResponseEntity<Long>(compraService.update(updatedCompra), HttpStatus.OK);
     }
 
+    @PutMapping("/")
+    public ResponseEntity<Long> updateFactura(@RequestBody CompraEntity updatedCompra) {
+        return new ResponseEntity<Long>(compraService.updateFactura(updatedCompra), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<Long>(compraService.delete(id), HttpStatus.OK);

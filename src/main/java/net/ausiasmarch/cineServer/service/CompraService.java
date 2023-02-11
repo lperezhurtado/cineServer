@@ -114,6 +114,21 @@ public class CompraService {
         return compraRepo.save(actualCompra).getId();
     }
 
+    public Long updateFactura(CompraEntity updatedCompra) {
+        validateID(updatedCompra.getId());
+        CompraEntity actualCompra = compraRepo.getReferenceById(updatedCompra.getId());
+        //EntradaEntity actualEntrada = entradaRepo.getReferenceById(actualCompra.getEntrada().getId());//Se cambia el estado de la entrada comprada original a libre
+        //actualEntrada.setLibre(true);
+
+        //actualCompra.setDescuentoUsuario(updatedCompra.getDescuentoUsuario());
+        //actualCompra.setPrecio(updatedCompra.getPrecio());
+        //actualCompra.setFecha(updatedCompra.getFecha());
+        //actualCompra.setEntrada(updatedCompra.getEntrada());
+        actualCompra.setFactura(updatedCompra.getFactura());
+
+        return compraRepo.save(actualCompra).getId();
+    }
+
     public Long delete(Long id) {
         validateID(id);
         CompraEntity compra = compraRepo.getReferenceById(id);
