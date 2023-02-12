@@ -87,33 +87,43 @@ public class SesionService {
         }
     }*/    
     //GETPAGE CON FILTRO revisar por si acaso
-    public Page<SesionEntity> getPage(Pageable pageable, Long id_sala, Long id_pelicula, Long id_tarifa) {
+    public Page<SesionEntity> getPage(Pageable pageable, Long id_sala, Long id_pelicula, Long id_tarifa, String filter) {
         ValidationHelper.validateRPP(pageable.getPageSize());
-
-        if (id_sala == null && id_pelicula != null && id_tarifa != null) {
-            return sesionRepo.findByPeliculaIdAndTarifaId(id_pelicula, id_tarifa, pageable);
+        if(authService.isAdmin() == false){
+            if (id_sala == null && id_pelicula != null && id_tarifa != null) {
+                return sesionRepo.findByPeliculaIdAndTarifaId(id_pelicula, id_tarifa, pageable);
+            }
+            else if(id_sala != null && id_pelicula != null && id_tarifa == null) {
+                return sesionRepo.findBySalaIdAndPeliculaId(id_sala, id_pelicula, pageable);
+            }
+            else if(id_sala != null && id_pelicula == null && id_tarifa != null) {
+                return sesionRepo.findBySalaIdAndTarifaId(id_sala, id_tarifa, pageable);
+            }
+            else if(id_sala != null && id_pelicula != null && id_tarifa != null) {
+                return sesionRepo.findBySalaIdAndPeliculaIdAndTarifaId(id_sala, id_pelicula, id_tarifa, pageable);
+            }
+            else if(id_sala != null && id_pelicula == null && id_tarifa == null) {
+                return sesionRepo.findBySalaId(id_sala, pageable);
+            }
+            else if(id_sala == null && id_pelicula != null && id_tarifa == null) {
+                return sesionRepo.findByPeliculaId(id_pelicula, pageable);
+            }
+            else if(id_sala == null && id_pelicula == null && id_tarifa != null) {
+                return sesionRepo.findByTarifaId(id_tarifa, pageable);
+            }
+            else{
+                return sesionRepo.findAll(pageable);
+            }
         }
-        else if(id_sala != null && id_pelicula != null && id_tarifa == null) {
-            return sesionRepo.findBySalaIdAndPeliculaId(id_sala, id_pelicula, pageable);
+        else {
+            if (filter != null) {
+                return sesionRepo.findByPeliculaIdAndFechaHoraContaining(id_pelicula, filter, pageable); 
+            }
+            else {
+                return sesionRepo.findByPeliculaId(id_pelicula, pageable);
+            }
         }
-        else if(id_sala != null && id_pelicula == null && id_tarifa != null) {
-            return sesionRepo.findBySalaIdAndTarifaId(id_sala, id_tarifa, pageable);
-        }
-        else if(id_sala != null && id_pelicula != null && id_tarifa != null) {
-            return sesionRepo.findBySalaIdAndPeliculaIdAndTarifaId(id_sala, id_pelicula, id_tarifa, pageable);
-        }
-        else if(id_sala != null && id_pelicula == null && id_tarifa == null) {
-            return sesionRepo.findBySalaId(id_sala, pageable);
-        }
-        else if(id_sala == null && id_pelicula != null && id_tarifa == null) {
-            return sesionRepo.findByPeliculaId(id_pelicula, pageable);
-        }
-        else if(id_sala == null && id_pelicula == null && id_tarifa != null) {
-            return sesionRepo.findByTarifaId(id_tarifa, pageable);
-        }
-        else{
-            return sesionRepo.findAll(pageable);
-        }
+        
     }
 
     public SesionEntity get(Long id) {

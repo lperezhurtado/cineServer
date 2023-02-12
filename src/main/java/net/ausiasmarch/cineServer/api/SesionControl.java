@@ -38,9 +38,10 @@ public class SesionControl {
         @ParameterObject @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable,
         @RequestParam(value = "sala", required = false) Long id_sala,
         @RequestParam(value = "pelicula", required = false) Long id_pelicula,
-        @RequestParam(value = "tarifa", required = false) Long id_tarifa
+        @RequestParam(value = "tarifa", required = false) Long id_tarifa,
+        @RequestParam(value = "filter", required = false) String filter
         ) {
-        return new ResponseEntity<Page<SesionEntity>>(sesionService.getPage(pageable, id_sala, id_pelicula, id_tarifa), HttpStatus.OK);
+        return new ResponseEntity<Page<SesionEntity>>(sesionService.getPage(pageable, id_sala, id_pelicula, id_tarifa, filter), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -3,6 +3,8 @@ package net.ausiasmarch.cineServer.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
 import net.ausiasmarch.cineServer.entity.SesionEntity;
 
 public interface SesionRepository extends JpaRepository<SesionEntity, Long> {
@@ -19,7 +21,9 @@ public interface SesionRepository extends JpaRepository<SesionEntity, Long> {
 
     Page<SesionEntity> findBySalaIdAndTarifaId(Long id_sala, Long id_tarifa, Pageable pageable);
 
-    Page<SesionEntity> findBySalaIdAndPeliculaIdAndTarifaId(Long id_sala, Long id_pelicula, Long id_tarifa,
-            Pageable pageable);
+    Page<SesionEntity> findBySalaIdAndPeliculaIdAndTarifaId(Long id_sala, Long id_pelicula, Long id_tarifa, Pageable pageable);
+
+    @Query(value = "SELECT * FROM sesion WHERE id_pelicula = ?1 AND fecha_hora LIKE  %?2%", nativeQuery = true)
+    Page<SesionEntity> findByPeliculaIdAndFechaHoraContaining(Long id_pelicula, String filter, Pageable pageable);
     
 }

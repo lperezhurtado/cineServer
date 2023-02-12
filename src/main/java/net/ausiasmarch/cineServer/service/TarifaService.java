@@ -70,7 +70,7 @@ public class TarifaService {
     }
 
     public Long count() {
-        authService.onlyAdmins();
+        //authService.onlyAdmins();
         return tarifaRepo.count();
     }
 
