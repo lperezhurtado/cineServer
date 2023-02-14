@@ -24,6 +24,6 @@ public interface SesionRepository extends JpaRepository<SesionEntity, Long> {
     Page<SesionEntity> findBySalaIdAndPeliculaIdAndTarifaId(Long id_sala, Long id_pelicula, Long id_tarifa, Pageable pageable);
 
     @Query(value = "SELECT * FROM sesion WHERE id_pelicula = ?1 AND fecha_hora LIKE  %?2%", nativeQuery = true)
-    Page<SesionEntity> findByPeliculaIdAndFechaHoraContaining(Long id_pelicula, String filter, Pageable pageable);
+    Page<SesionEntity> findByPeliculaIdAndFechahoraContaining(Long id_pelicula, String filter, Pageable pageable);
     
 }

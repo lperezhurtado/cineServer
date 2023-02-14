@@ -89,7 +89,7 @@ public class SesionService {
     //GETPAGE CON FILTRO revisar por si acaso
     public Page<SesionEntity> getPage(Pageable pageable, Long id_sala, Long id_pelicula, Long id_tarifa, String filter) {
         ValidationHelper.validateRPP(pageable.getPageSize());
-        if(authService.isAdmin() == false){
+        /*if(authService.isAdmin() == false){*/
             if (id_sala == null && id_pelicula != null && id_tarifa != null) {
                 return sesionRepo.findByPeliculaIdAndTarifaId(id_pelicula, id_tarifa, pageable);
             }
@@ -105,6 +105,9 @@ public class SesionService {
             else if(id_sala != null && id_pelicula == null && id_tarifa == null) {
                 return sesionRepo.findBySalaId(id_sala, pageable);
             }
+            /*else if(id_sala == null && id_pelicula != null && id_tarifa == null && filter != null) { //AÑADIDA ESTE ELSE IF
+                return sesionRepo.findByPeliculaIdAndFechahoraContaining(id_pelicula, filter, pageable); 
+            }*/
             else if(id_sala == null && id_pelicula != null && id_tarifa == null) {
                 return sesionRepo.findByPeliculaId(id_pelicula, pageable);
             }
@@ -114,7 +117,7 @@ public class SesionService {
             else{
                 return sesionRepo.findAll(pageable);
             }
-        }
+        /*}
         else {
             if (filter != null) {
                 return sesionRepo.findByPeliculaIdAndFechaHoraContaining(id_pelicula, filter, pageable); 
@@ -122,7 +125,7 @@ public class SesionService {
             else {
                 return sesionRepo.findByPeliculaId(id_pelicula, pageable);
             }
-        }
+        }*/
         
     }
 
@@ -162,8 +165,8 @@ public class SesionService {
     public Long delete(Long id) {
         authService.onlyAdmins();
         validateID(id);
-
-        borrarEntradas(id); //antes de eliminar la sesion, borra las entradas
+        //DE MOMENTO NO SE BORRARÁN LAS ENTRADAS
+        //borrarEntradas(id); //antes de eliminar la sesion, borra las entradas
         sesionRepo.deleteById(id);
 
         if(sesionRepo.existsById(id)) {

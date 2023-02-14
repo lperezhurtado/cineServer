@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -100,6 +101,11 @@ public class SesionEntity implements Serializable {
 
     public void setPelicula(PeliculaEntity pelicula) {
         this.pelicula = pelicula;
+    }
+
+    @PreRemove
+    public void nullify() {
+        this.entradas.forEach(c -> c.setSesion(null));
     }
     
 }
